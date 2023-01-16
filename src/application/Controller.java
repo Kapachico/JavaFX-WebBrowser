@@ -1,12 +1,15 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,7 +33,10 @@ public class Controller implements Initializable{
 	private TextField searchTF;
 	
 	@FXML
-	private Button reload,zoomInBtn,zoomOutBtn,resetBtn,forwardBtn,backwardBtn;
+	private Button reload,zoomInBtn,zoomOutBtn,resetBtn,forwardBtn,backwardBtn,newWindowBtn,btnBookmark;
+	
+	@FXML
+	HBox hbBookmark;
 	
 	private WebEngine engine; 
 	private WebHistory history;
@@ -116,9 +122,30 @@ public class Controller implements Initializable{
 	}
 	
 	
+	public void newWindow() throws IOException {
+		Parent root= FXMLLoader.load(getClass().getResource("web.fxml"));
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage newStage=new Stage();
+		newStage.setScene(scene);
+		newStage.show();
+	}
 	
-	
-	
+	public void bookmark() {
+		if (hbBookmark.getChildren().size()< 5) {
+			String url=searchTF.getText();
+			String name = (searchTF.getText()).substring(4,10);//www.
+			Button btn=new Button(name);
+			btn.setOnAction(e->{
+				searchTF.setText(url);
+				engine.load("http://"+searchTF.getText());
+			});
+			hbBookmark.getChildren().add(btn);
+		}else{
+			System.out.println("A maximum of 5 bookmarks are allowed!");
+		}
+		
+	}
 	
 	public void getHistory() {
 		history=engine.getHistory();

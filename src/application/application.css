@@ -8,3 +8,7 @@
 	-fx-font-weight:900;
 	-fx-font-size:20px;
 }
+Button{
+	-fx-border-radius:5px;
+	-fx-font-weight:bold;
+}
